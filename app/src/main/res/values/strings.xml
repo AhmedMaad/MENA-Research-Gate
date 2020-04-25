@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">MENA Research Gate</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mena_logo_description">Logo for middle east and north africa research gate</string>
+    <string name="facebook_login">Facebook</string>
+    <string name="google_login">Google</string>
+    <string name="log_in_with">Log in with:</string>
+    <string name="or">or</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">sign in</string>
+    <string name="forgot_your_password">Forgot Your Password?</string>
+    <string name="reset_link"><i>Enter the email address you signed up with and we\'ll email you a reset link</i></string>
+    <string name="send_password_reset_link">send password reset link</string>
+    <string name="dont_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up"><u>Sign Up</u></string>
+</resources>

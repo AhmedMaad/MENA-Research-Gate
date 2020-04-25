@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "528741981612",
+    "firebase_url": "https://mena-research-gate.firebaseio.com",
+    "project_id": "mena-research-gate",
+    "storage_bucket": "mena-research-gate.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528741981612:android:514f05efa0f127f2766e09",
+        "android_client_info": {
+          "package_name": "com.maad.menaresearchgate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528741981612-uaf6dvb3sn11hjs907q308rsma7lo4d7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.maad.menaresearchgate",
+            "certificate_hash": "2c4ec29857c1dd50abffae6206ec9956f86028b9"
+          }
+        },
+        {
+          "client_id": "528741981612-v62ufsfpubat1id5lpmvi9840hhvhcdj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBArNJJg0rx8NQ5cIS97I5EQHYpoHOrbT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "528741981612-v62ufsfpubat1id5lpmvi9840hhvhcdj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

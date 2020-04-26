@@ -1,15 +1,15 @@
-package com.maad.menaresearchgate;
+package com.maad.menaresearchgate.ui.fragments;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.maad.menaresearchgate.databinding.FragmentLoginBinding;
+import com.maad.menaresearchgate.ui.activities.RegisterActivity;
 
 public class LoginFragment extends Fragment {
     private int visibilityCounter = 0;
@@ -34,6 +34,14 @@ public class LoginFragment extends Fragment {
                     loginBinding.llResetContainer.setVisibility(View.GONE);
                     ++visibilityCounter;
                 }
+            }
+        });
+
+        loginBinding.tvSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SignupFragment signupFragment = new SignupFragment();
+                ((RegisterActivity) getActivity()).openRegisterFragment(signupFragment);
             }
         });
 

@@ -1,4 +1,4 @@
-package com.maad.menaresearchgate;
+package com.maad.menaresearchgate.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -7,7 +7,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import com.maad.menaresearchgate.R;
+import com.maad.menaresearchgate.ui.fragments.LoginFragment;
+
+public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,13 +18,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LoginFragment loginFragment = new LoginFragment();
-        openLoginFragment(loginFragment);
+        openRegisterFragment(loginFragment);
     }
 
-
-    private void openLoginFragment(Fragment fragment) {
+    public void openRegisterFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit);
         transaction.replace(R.id.container_registeration, fragment);
         transaction.commit();
     }

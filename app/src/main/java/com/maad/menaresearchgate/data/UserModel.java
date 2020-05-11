@@ -1,9 +1,11 @@
 package com.maad.menaresearchgate.data;
 
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -16,8 +18,6 @@ public class UserModel {
     private String username;
     private String email;
     private String password;
-
-
 
     public String getFirstName() {
         return firstName;
@@ -53,5 +53,7 @@ public class UserModel {
                     }
                 });
     }
+
+
 
 }

@@ -1,7 +1,9 @@
 package com.maad.menaresearchgate.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -12,6 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.auth.User;
 import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.Validation;
 import com.maad.menaresearchgate.data.GeneralUserHandler;
@@ -21,6 +30,8 @@ import com.maad.menaresearchgate.ui.activities.RegisterActivity;
 
 
 public class SignupFragment extends Fragment {
+
+    private int googleSignUpKey = 0;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -130,6 +141,42 @@ public class SignupFragment extends Fragment {
             }
         });
 
+        signupBinding.btnGoogleSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // Configure Google Sign In
+                GoogleSignInOptions gso = new GoogleSignInOptions
+                        .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestEmail()
+                        .build();
+                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, googleSignUpKey);
+            }
+        });
         return signupBinding.getRoot();
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == googleSignUpKey) {
+            // The Task returned from this call is always completed, no need to attach a listener
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Toast.makeText(getContext(), R.string.user_added, Toast.LENGTH_SHORT).show();
+            } catch (ApiException e) {
+                // The ApiException status code indicates the detailed failure reason.
+                // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                Log.d("json", "signInResult:failed code=" + e.getStatusCode());
+                Toast.makeText(getContext(), R.string.user_failed, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
 }

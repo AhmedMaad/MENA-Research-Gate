@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:animateLayoutChanges="true"
+    android:orientation="vertical"
     tools:context=".ui.fragments.LoginFragment">
 
     <TextView
@@ -160,6 +160,7 @@
         app:layout_constraintTop_toTopOf="@id/iv_person">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/email"
@@ -257,19 +258,17 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <Button
+            android:id="@+id/btn_password_reset_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/blue"
+            android:text="@string/send_password_reset_link"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/btn_password_reset_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@color/blue"
-        android:text="@string/send_password_reset_link"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/ll_reset_container" />
 
     <View
         android:id="@+id/v_breakline_after_reset_btn"
@@ -277,7 +276,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="32dp"
         android:background="@color/gray"
-        app:layout_constraintTop_toBottomOf="@id/btn_password_reset_link" />
+        app:layout_constraintTop_toBottomOf="@id/ll_reset_container" />
 
     <LinearLayout
         android:id="@+id/ll_signup_container"

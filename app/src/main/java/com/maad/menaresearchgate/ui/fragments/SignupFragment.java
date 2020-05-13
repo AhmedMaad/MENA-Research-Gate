@@ -18,14 +18,18 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.auth.User;
 import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.FacebookHandler;
+import com.maad.menaresearchgate.data.GoogleHandler;
 import com.maad.menaresearchgate.data.Validation;
 import com.maad.menaresearchgate.data.GeneralUserHandler;
 import com.maad.menaresearchgate.data.UserModel;
@@ -157,6 +161,7 @@ public class SignupFragment extends Fragment {
                 // Configure Google Sign In
                 GoogleSignInOptions gso = new GoogleSignInOptions
                         .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
                         .requestEmail()
                         .build();
                 GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
@@ -205,10 +210,24 @@ public class SignupFragment extends Fragment {
         if (requestCode == googleSignUpKey) {
             // The Task returned from this call is always completed, no need to attach a listener
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Toast.makeText(getContext(), "Hello " + account.getDisplayName(), Toast.LENGTH_SHORT).show();
+                Log.d("json", "idToken: " + account.getIdToken());
+                UserModel userModel = new UserModel();
+                userModel.registerWithGoogle(account.getIdToken(), new GoogleHandler() {
+                    @Override
+                    public void onSuccess(Task<AuthResult> task) {
+                        if (task.isSuccessful())
+                            Toast.makeText(getContext(), "Hello " + task.getResult().getUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getContext(), R.string.wrong_email_password, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.d("json", "Exception: " + e.getMessage());
+                    }
+                });
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.

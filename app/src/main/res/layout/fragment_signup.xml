@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragments.SignupFragment">
 
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/facebook_defaultbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_login_in_with"
         android:layout_width="wrap_content"

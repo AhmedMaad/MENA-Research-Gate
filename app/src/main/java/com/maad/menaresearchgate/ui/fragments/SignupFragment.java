@@ -14,24 +14,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.auth.User;
 import com.maad.menaresearchgate.R;
+import com.maad.menaresearchgate.data.FacebookHandler;
 import com.maad.menaresearchgate.data.Validation;
 import com.maad.menaresearchgate.data.GeneralUserHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.databinding.FragmentSignupBinding;
 import com.maad.menaresearchgate.ui.activities.RegisterActivity;
 
+import java.util.Arrays;
+
 
 public class SignupFragment extends Fragment {
 
     private int googleSignUpKey = 0;
+    private CallbackManager manager;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -41,6 +48,9 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final FragmentSignupBinding signupBinding = FragmentSignupBinding.inflate(inflater, container, false);
+
+        //To register a callback for Facebook integration
+        manager = CallbackManager.Factory.create();
 
         signupBinding.tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +114,6 @@ public class SignupFragment extends Fragment {
                     signupBinding.containerPasswordEt.setError(getResources().getString(R.string.special_password_error));
                 else
                     signupBinding.containerPasswordEt.setError(null);
-
             }
         });
 
@@ -155,6 +164,37 @@ public class SignupFragment extends Fragment {
                 startActivityForResult(signInIntent, googleSignUpKey);
             }
         });
+
+        signupBinding.btnFacebookSignup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("json", "Sign up button clicked");
+                signupBinding.facebookDefaultbutton.setFragment(SignupFragment.this);
+                LoginManager.getInstance().logInWithReadPermissions(getActivity(), Arrays.asList("email,public_profile"));
+                signupBinding.facebookDefaultbutton.performClick();
+
+
+                UserModel userModel = new UserModel();
+                userModel.registerWithFacebook(signupBinding.facebookDefaultbutton, manager, new FacebookHandler() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Log.d("json",
+                                "https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?return_ssl_resources=1");
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d("json", "Operation Cancelled");
+                    }
+
+                    @Override
+                    public void onFailure(FacebookException exception) {
+                        Log.d("json", "Failed: " + exception.getMessage());
+                    }
+                });
+
+            }
+        });
         return signupBinding.getRoot();
     }
 
@@ -168,15 +208,18 @@ public class SignupFragment extends Fragment {
 
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                Toast.makeText(getContext(), R.string.user_added, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Hello " + account.getDisplayName(), Toast.LENGTH_SHORT).show();
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
                 Log.d("json", "signInResult:failed code=" + e.getStatusCode());
-                Toast.makeText(getContext(), R.string.user_failed, Toast.LENGTH_SHORT).show();
             }
-
         }
+
+        //This line is for the Facebook functionality
+        Log.d("json", "Manager state from onActivityResult: " + manager);
+        manager.onActivityResult(requestCode, resultCode, data);
+
     }
 
 }

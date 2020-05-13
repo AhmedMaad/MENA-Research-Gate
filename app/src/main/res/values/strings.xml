@@ -33,4 +33,6 @@
     <string name="upper_password_error">Password should contain an uppercase character</string>
     <string name="special_password_error">Password should contain a special character</string>
     <string name="username_error">uppercase and special characters are not allowed</string>
+    <string name="facebook_app_id">541193916819783</string>
+    <string name="fb_login_protocol_scheme">fb541193916819783</string>
 </resources>

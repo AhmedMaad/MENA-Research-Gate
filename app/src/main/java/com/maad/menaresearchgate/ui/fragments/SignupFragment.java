@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -41,8 +42,8 @@ import java.util.Arrays;
 
 public class SignupFragment extends Fragment {
 
-    private int googleSignUpKey = 0;
-    private CallbackManager manager;
+    //private int googleSignUpKey = 0;
+    //private CallbackManager manager;
 
     public SignupFragment() {
         // Required empty public constructor
@@ -52,9 +53,11 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final FragmentSignupBinding signupBinding = FragmentSignupBinding.inflate(inflater, container, false);
+        TextView loginSignupTv = getActivity().findViewById(R.id.tv_login_signup_with);
+        loginSignupTv.setText(R.string.sign_up_with);
 
-        //To register a callback for Facebook integration
-        manager = CallbackManager.Factory.create();
+        /*//To register a callback for Facebook integration
+        manager = CallbackManager.Factory.create();*/
 
         signupBinding.tvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +157,7 @@ public class SignupFragment extends Fragment {
             }
         });
 
-        signupBinding.btnGoogleSignup.setOnClickListener(new View.OnClickListener() {
+        /*signupBinding.btnGoogleSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -199,11 +202,11 @@ public class SignupFragment extends Fragment {
                 });
 
             }
-        });
+        });*/
         return signupBinding.getRoot();
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
@@ -239,6 +242,6 @@ public class SignupFragment extends Fragment {
         Log.d("json", "Manager state from onActivityResult: " + manager);
         manager.onActivityResult(requestCode, resultCode, data);
 
-    }
+    }*/
 
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
@@ -31,7 +32,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         final FragmentLoginBinding loginBinding = FragmentLoginBinding.inflate(inflater, container, false);
-
+        TextView loginSignupTv = getActivity().findViewById(R.id.tv_login_signup_with);
+        loginSignupTv.setText(R.string.log_in_with);
         loginBinding.tvForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

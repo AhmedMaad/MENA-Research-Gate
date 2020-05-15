@@ -5,7 +5,7 @@ import com.google.firebase.auth.AuthResult;
 
 public interface LoginHandler {
 
-    void onSuccess(Task<AuthResult> task);
+    <T> void onSuccess(Task<T> task);
 
     void onFailure(Exception e);
 

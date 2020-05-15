@@ -7,16 +7,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.graphics.LinearGradient;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
@@ -30,13 +26,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.FacebookHandler;
-import com.maad.menaresearchgate.data.GoogleHandler;
+import com.maad.menaresearchgate.data.GeneralUserHandler;
+import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.databinding.ActivityMainBinding;
 import com.maad.menaresearchgate.ui.fragments.LoginFragment;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -51,16 +46,12 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        //setContentView(R.layout.activity_main);
 
         //To register a callback for Facebook integration
         manager = CallbackManager.Factory.create();
 
         LoginFragment loginFragment = new LoginFragment();
         openRegisterFragment(loginFragment);
-
-
-        //printKeyHash();
 
     }
 
@@ -77,14 +68,17 @@ public class RegisterActivity extends AppCompatActivity {
         //TODO: de el mfrood kanet btt3ml ll fragment bas fa law msht8ltsh GOOGLE IT
         //signupBinding.facebookDefaultbutton.setFragment(SignupFragment.this);
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email,public_profile"));
-        binding.facebookDefaultbutton.performClick();
+        //We are acting like clicking on the default button but actually we are clicking on a custom button
+        //binding.facebookDefaultbutton.performClick();
 
-        UserModel userModel = new UserModel();
+        final UserModel userModel = new UserModel();
         userModel.registerWithFacebook(binding.facebookDefaultbutton, manager, new FacebookHandler() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d("json",
                         "https://graph.facebook.com/" + loginResult.getAccessToken().getUserId() + "/picture?return_ssl_resources=1");
+                AccessToken accessToken = loginResult.getAccessToken();
+                handleFacebookWithFirebase(accessToken);
             }
 
             @Override
@@ -95,8 +89,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(FacebookException exception) {
                 Log.d("json", "Facebook Failed: " + exception.getMessage());
-                //Log.d("json", "Facebook Failure cause: " + );
-                exception.printStackTrace();
+                //Code 190: User changed their password or Facebook has changed the session for security reasons.
+                if (exception.getMessage().contains("190"))
+                    Toast.makeText(RegisterActivity.this, R.string.facebook_login, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -116,6 +111,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d("json", "Calling onActivityResult...");
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == googleSignUpKey) {
             // The Task returned from this call is always completed, no need to attach a listener
@@ -124,12 +120,14 @@ public class RegisterActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("json", "idToken: " + account.getIdToken());
                 UserModel userModel = new UserModel();
-                userModel.registerWithGoogle(account.getIdToken(), new GoogleHandler() {
+                userModel.registerWithGoogle(account.getIdToken(), new LoginHandler() {
                     @Override
-                    public void onSuccess(Task<AuthResult> task) {
-                        if (task.isSuccessful())
-                            Toast.makeText(RegisterActivity.this, "Hello " + task.getResult().getUser().getDisplayName(), Toast.LENGTH_SHORT).show();
-                        else
+                    public <T> void onSuccess(Task<T> task) {
+                        if (task.isSuccessful()) {
+                            Object authResultGeneric = task.getResult();
+                            AuthResult authResult = AuthResult.class.cast(authResultGeneric);
+                            Toast.makeText(RegisterActivity.this, "Hello " + authResult.getUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                        } else
                             Toast.makeText(RegisterActivity.this, R.string.wrong_email_password, Toast.LENGTH_SHORT).show();
                     }
 
@@ -151,21 +149,19 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    /*private void printKeyHash() {
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.maad.menaresearchgate",
-                    PackageManager.GET_SIGNATURES);//change to your package name
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KEYHASH", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                //this is your keyhash
+    private void handleFacebookWithFirebase(AccessToken accessToken) {
+        UserModel userModel = new UserModel();
+        userModel.handleFacebookAccessToken(accessToken, new GeneralUserHandler() {
+            @Override
+            public <T> void onSuccess(Task<T> task) {
+                Log.d("json", "User should be added by now in Firebase");
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }*/
+
+            @Override
+            public void onFailure() {
+                Log.d("json", "Error to be solved");
+            }
+        });
+    }
 
 }

@@ -1,9 +1,7 @@
 package com.maad.menaresearchgate.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
@@ -15,29 +13,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.auth.User;
+import com.google.firebase.auth.FirebaseUser;
 import com.maad.menaresearchgate.R;
-import com.maad.menaresearchgate.data.FacebookHandler;
-import com.maad.menaresearchgate.data.GoogleHandler;
 import com.maad.menaresearchgate.data.Validation;
 import com.maad.menaresearchgate.data.GeneralUserHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.databinding.FragmentSignupBinding;
 import com.maad.menaresearchgate.ui.activities.RegisterActivity;
-
-import java.util.Arrays;
 
 
 public class SignupFragment extends Fragment {
@@ -140,11 +124,27 @@ public class SignupFragment extends Fragment {
                         Toast.makeText(getContext(), R.string.missing_fileds, Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-                        UserModel userModel = new UserModel();
+                        /*final UserModel userModel = new UserModel();
                         userModel.addNewUser(email, password, new GeneralUserHandler() {
                             @Override
-                            public void onSuccess() {
-                                Toast.makeText(getContext(), R.string.user_added, Toast.LENGTH_SHORT).show();
+                            public void onSuccess(Task<AuthResult> task) {
+                                //Toast.makeText(getContext(), R.string.user_added, Toast.LENGTH_SHORT).show();
+                                //handle user verification
+                                userModel.verifyEmailAddress(task.getResult().getUser(), );
+                            }
+
+                            @Override
+                            public void onFailure() {
+                                Toast.makeText(getContext(), R.string.user_failed, Toast.LENGTH_SHORT).show();
+                            }
+                        });*/
+                        final UserModel userModel = new UserModel();
+                        userModel.addNewUser(email, password, new GeneralUserHandler() {
+                            @Override
+                            public <T> void onSuccess(Task<T> task) {
+                                Object authResultGeneric = task.getResult();
+                                AuthResult authResult = AuthResult.class.cast(authResultGeneric);
+                                verifyEmail(authResult.getUser());
                             }
 
                             @Override
@@ -152,6 +152,7 @@ public class SignupFragment extends Fragment {
                                 Toast.makeText(getContext(), R.string.user_failed, Toast.LENGTH_SHORT).show();
                             }
                         });
+
                         break;
                 }
             }
@@ -243,5 +244,21 @@ public class SignupFragment extends Fragment {
         manager.onActivityResult(requestCode, resultCode, data);
 
     }*/
+
+    private void verifyEmail(final FirebaseUser user) {
+        UserModel userModel = new UserModel();
+        userModel.verifyEmailAddress(user, new GeneralUserHandler() {
+            @Override
+            public <T> void onSuccess(Task<T> task) {
+                Log.d("json", "Email sent to: " + user.getEmail());
+                Toast.makeText(getContext(), R.string.verify_email, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure() {
+                Log.d("json", "Cannot verify email");
+            }
+        });
+    }
 
 }

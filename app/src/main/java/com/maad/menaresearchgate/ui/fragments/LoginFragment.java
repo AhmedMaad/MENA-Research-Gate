@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
 import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
@@ -71,9 +73,18 @@ public class LoginFragment extends Fragment {
                         UserModel userModel = new UserModel();
                         userModel.loginWithFirebase(email, password, new LoginHandler() {
                             @Override
-                            public void onSuccess(Task<AuthResult> task) {
-                                if (task.isSuccessful())
-                                    Log.d("json", "Logged in: " + task.getResult().getUser().getEmail());
+                            public <T> void onSuccess(Task<T> task) {
+                                if (task.isSuccessful()){
+                                    Object authResultGeneric = task.getResult();
+                                    AuthResult authResult = AuthResult.class.cast(authResultGeneric);
+                                    FirebaseUser user = authResult.getUser();
+                                    Log.d("json", "Email found: " + user.getEmail());
+                                    if (user.isEmailVerified())
+                                        Toast.makeText(getContext(), R.string.logged_successfully, Toast.LENGTH_SHORT).show();
+                                    else
+                                        Toast.makeText(getContext(), R.string.verify_email, Toast.LENGTH_SHORT).show();
+                                }
+
                                 else
                                     Toast.makeText(getContext(), R.string.wrong_email_password, Toast.LENGTH_SHORT).show();
                             }

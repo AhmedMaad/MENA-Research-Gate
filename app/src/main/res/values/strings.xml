@@ -36,4 +36,7 @@
     <string name="facebook_app_id">541193916819783</string>
     <string name="fb_login_protocol_scheme">fb541193916819783</string>
     <string name="wrong_email_password">Wrong email or password</string>
+    <string name="login_facebook">Session expired, login into your Facebook account first</string>
+    <string name="verify_email">Please verify your email to login</string>
+    <string name="logged_successfully">Logged in successfully</string>
 </resources>

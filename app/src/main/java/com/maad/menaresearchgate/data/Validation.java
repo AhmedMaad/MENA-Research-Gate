@@ -26,5 +26,13 @@ public class Validation {
             return 1;
     }
 
+    /**
+     * @return 0: if all the fields are empty or don't meet validity requirements
+     * 1: if all the fields meet validity requirements
+     */
+    public int validateFields(String text) {
+        return text.equals("") ? 0 : 1;
+    }
+
 
 }

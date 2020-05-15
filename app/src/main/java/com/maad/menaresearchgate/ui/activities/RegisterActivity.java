@@ -29,21 +29,21 @@ import com.maad.menaresearchgate.data.FacebookHandler;
 import com.maad.menaresearchgate.data.GeneralUserHandler;
 import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
-import com.maad.menaresearchgate.databinding.ActivityMainBinding;
+import com.maad.menaresearchgate.databinding.ActivityRegisterBinding;
 import com.maad.menaresearchgate.ui.fragments.LoginFragment;
 
 import java.util.Arrays;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private ActivityRegisterBinding binding;
     private int googleSignUpKey = 0;
     private CallbackManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
@@ -65,11 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void registerWithFacebook(View view) {
         Log.d("json", "Sign up button clicked");
-        //TODO: de el mfrood kanet btt3ml ll fragment bas fa law msht8ltsh GOOGLE IT
-        //signupBinding.facebookDefaultbutton.setFragment(SignupFragment.this);
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email,public_profile"));
-        //We are acting like clicking on the default button but actually we are clicking on a custom button
-        //binding.facebookDefaultbutton.performClick();
 
         final UserModel userModel = new UserModel();
         userModel.registerWithFacebook(binding.facebookDefaultbutton, manager, new FacebookHandler() {

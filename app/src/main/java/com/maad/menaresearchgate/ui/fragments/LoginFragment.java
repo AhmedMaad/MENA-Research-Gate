@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.maad.menaresearchgate.R;
+import com.maad.menaresearchgate.data.GeneralUserHandler;
 import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.data.Validation;
@@ -74,7 +75,7 @@ public class LoginFragment extends Fragment {
                         userModel.loginWithFirebase(email, password, new LoginHandler() {
                             @Override
                             public <T> void onSuccess(Task<T> task) {
-                                if (task.isSuccessful()){
+                                if (task.isSuccessful()) {
                                     Object authResultGeneric = task.getResult();
                                     AuthResult authResult = AuthResult.class.cast(authResultGeneric);
                                     FirebaseUser user = authResult.getUser();
@@ -83,15 +84,42 @@ public class LoginFragment extends Fragment {
                                         Toast.makeText(getContext(), R.string.logged_successfully, Toast.LENGTH_SHORT).show();
                                     else
                                         Toast.makeText(getContext(), R.string.verify_email, Toast.LENGTH_SHORT).show();
-                                }
-
-                                else
+                                } else
                                     Toast.makeText(getContext(), R.string.wrong_email_password, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public void onFailure(Exception e) {
                                 Log.d("json", "Exception: " + e.getMessage());
+                            }
+                        });
+                        break;
+                }
+
+            }
+        });
+
+        loginBinding.btnPasswordResetLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String writtenEmail = loginBinding.etResetEmail.getText().toString();
+                Validation validation = new Validation();
+                int validationResult = validation.validateFields(writtenEmail);
+                switch (validationResult) {
+                    case 0:
+                        Toast.makeText(getContext(), R.string.missing_fileds, Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        UserModel userModel = new UserModel();
+                        userModel.resetPassword(writtenEmail, new GeneralUserHandler() {
+                            @Override
+                            public <T> void onSuccess(Task<T> task) {
+                                Toast.makeText(getContext(), R.string.check_email, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure() {
+                                Toast.makeText(getContext(), R.string.email_not_recorded, Toast.LENGTH_SHORT).show();
                             }
                         });
                         break;

@@ -149,5 +149,23 @@ public class UserModel {
                 });
     }
 
+    //Reset password with Firebase authentication only
+    public void resetPassword(String emailAddress, final GeneralUserHandler userHandler){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        auth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                            userHandler.onSuccess(task);
+                        else
+                            userHandler.onFailure();
+
+                    }
+                });
+
+    }
+
 
 }

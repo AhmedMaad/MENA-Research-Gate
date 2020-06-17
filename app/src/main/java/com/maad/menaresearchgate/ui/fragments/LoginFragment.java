@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.maad.menaresearchgate.R;
-import com.maad.menaresearchgate.data.GeneralUserHandler;
+import com.maad.menaresearchgate.data.GeneralHandler;
 import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.data.Validation;
@@ -111,15 +110,16 @@ public class LoginFragment extends Fragment {
                         break;
                     case 1:
                         UserModel userModel = new UserModel();
-                        userModel.resetPassword(writtenEmail, new GeneralUserHandler() {
+                        userModel.resetPassword(writtenEmail, new GeneralHandler() {
                             @Override
                             public <T> void onSuccess(Task<T> task) {
                                 Toast.makeText(getContext(), R.string.check_email, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
-                            public void onFailure() {
+                            public void onFailure(Exception e) {
                                 Toast.makeText(getContext(), R.string.email_not_recorded, Toast.LENGTH_SHORT).show();
+                                Log.d("json", "Error: " + e.getMessage());
                             }
                         });
                         break;

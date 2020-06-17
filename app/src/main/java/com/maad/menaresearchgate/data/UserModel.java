@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+//If any error happens without a log, just add an "else" statement to the onComplete listener
 public class UserModel {
 
     private String firstName;
@@ -47,7 +48,7 @@ public class UserModel {
     }
 
     //Creating a new user with Firebase Authentication
-    public void addNewUser(String email, String password, final GeneralUserHandler userHandler) {
+    public void addNewUser(String email, String password, final GeneralHandler userHandler) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -55,8 +56,12 @@ public class UserModel {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                             userHandler.onSuccess(task);
-                        else
-                            userHandler.onFailure();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        userHandler.onFailure(e);
                     }
                 });
     }
@@ -102,7 +107,7 @@ public class UserModel {
     }
 
     //Authenticate Facebook login with Firebase
-    public void handleFacebookAccessToken(AccessToken token, final GeneralUserHandler userHandler) {
+    public void handleFacebookAccessToken(AccessToken token, final GeneralHandler userHandler) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         final FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signInWithCredential(credential)
@@ -111,8 +116,12 @@ public class UserModel {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful())
                             userHandler.onSuccess(task);
-                        else
-                            userHandler.onFailure();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        userHandler.onFailure(e);
                     }
                 });
     }
@@ -136,21 +145,25 @@ public class UserModel {
     }
 
     //Verify email address after adding a new user with firebase authentication only
-    public void verifyEmailAddress(FirebaseUser user, final GeneralUserHandler handler) {
+    public void verifyEmailAddress(FirebaseUser user, final GeneralHandler handler) {
         user.sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful())
                             handler.onSuccess(task);
-                        else
-                            handler.onFailure();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        handler.onFailure(e);
                     }
                 });
     }
 
     //Reset password with Firebase authentication only
-    public void resetPassword(String emailAddress, final GeneralUserHandler userHandler){
+    public void resetPassword(String emailAddress, final GeneralHandler userHandler) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         auth.sendPasswordResetEmail(emailAddress)
@@ -159,9 +172,12 @@ public class UserModel {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful())
                             userHandler.onSuccess(task);
-                        else
-                            userHandler.onFailure();
-
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        userHandler.onFailure(e);
                     }
                 });
 

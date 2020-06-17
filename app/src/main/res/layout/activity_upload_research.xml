@@ -94,10 +94,27 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="choose file" />
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="chooseFile"
+                android:text="@string/choose_file" />
+
+            <TextView
+                android:id="@+id/tv_uploaded_file_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/no_file_chosen"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -117,7 +134,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.maad.menaresearchgate.data.research.CustomTokenView
                 android:id="@+id/et_research_interests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,6 +147,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@color/transparent"
+            android:onClick="uploadResearch"
             android:text="@string/upload"
             android:textColor="@color/lighterBlue"
             android:textSize="16sp" />

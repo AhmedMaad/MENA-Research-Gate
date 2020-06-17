@@ -26,7 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.FacebookHandler;
-import com.maad.menaresearchgate.data.GeneralUserHandler;
+import com.maad.menaresearchgate.data.GeneralHandler;
 import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.databinding.ActivityRegisterBinding;
@@ -147,15 +147,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void handleFacebookWithFirebase(AccessToken accessToken) {
         UserModel userModel = new UserModel();
-        userModel.handleFacebookAccessToken(accessToken, new GeneralUserHandler() {
+        userModel.handleFacebookAccessToken(accessToken, new GeneralHandler() {
             @Override
             public <T> void onSuccess(Task<T> task) {
                 Log.d("json", "User should be added by now in Firebase");
             }
 
             @Override
-            public void onFailure() {
-                Log.d("json", "Error to be solved");
+            public void onFailure(Exception e) {
+                Log.d("json", "Error to be solved: " + e.getMessage());
             }
         });
     }

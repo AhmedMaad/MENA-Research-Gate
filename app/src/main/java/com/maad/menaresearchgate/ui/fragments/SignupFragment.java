@@ -18,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.Validation;
-import com.maad.menaresearchgate.data.GeneralUserHandler;
+import com.maad.menaresearchgate.data.GeneralHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.databinding.FragmentSignupBinding;
 import com.maad.menaresearchgate.ui.activities.RegisterActivity;
@@ -34,7 +34,7 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final FragmentSignupBinding signupBinding = FragmentSignupBinding.inflate(inflater, container, false);
-        TextView loginSignupTv = getActivity(). findViewById(R.id.tv_login_signup_with);
+        TextView loginSignupTv = getActivity().findViewById(R.id.tv_login_signup_with);
         loginSignupTv.setText(R.string.sign_up_with);
 
         signupBinding.tvSignUp.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +119,7 @@ public class SignupFragment extends Fragment {
                         break;
                     case 1:
                         final UserModel userModel = new UserModel();
-                        userModel.addNewUser(email, password, new GeneralUserHandler() {
+                        userModel.addNewUser(email, password, new GeneralHandler() {
                             @Override
                             public <T> void onSuccess(Task<T> task) {
                                 Object authResultGeneric = task.getResult();
@@ -128,8 +128,9 @@ public class SignupFragment extends Fragment {
                             }
 
                             @Override
-                            public void onFailure() {
+                            public void onFailure(Exception e) {
                                 Toast.makeText(getContext(), R.string.user_failed, Toast.LENGTH_SHORT).show();
+                                Log.d("json", "Error: " + e.getMessage());
                             }
                         });
 
@@ -142,7 +143,7 @@ public class SignupFragment extends Fragment {
 
     private void verifyEmail(final FirebaseUser user) {
         UserModel userModel = new UserModel();
-        userModel.verifyEmailAddress(user, new GeneralUserHandler() {
+        userModel.verifyEmailAddress(user, new GeneralHandler() {
             @Override
             public <T> void onSuccess(Task<T> task) {
                 Log.d("json", "Email sent to: " + user.getEmail());
@@ -150,8 +151,8 @@ public class SignupFragment extends Fragment {
             }
 
             @Override
-            public void onFailure() {
-                Log.d("json", "Cannot verify email");
+            public void onFailure(Exception e) {
+                Log.d("json", "Cannot verify email: " + e.getMessage());
             }
         });
     }

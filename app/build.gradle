@@ -54,4 +54,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     //Enable Multidex for more methods
     implementation 'androidx.multidex:multidex:2.0.1'
+    //Tags "TokenAutoComplete"
+    implementation "com.splitwise:tokenautocomplete:3.0.1@aar"
+    //Cloud Firestore
+    implementation 'com.google.firebase:firebase-firestore:21.4.3'
+
 }

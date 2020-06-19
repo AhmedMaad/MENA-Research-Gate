@@ -106,12 +106,13 @@
                 android:text="@string/choose_file" />
 
             <TextView
-                android:id="@+id/tv_uploaded_file_name"
+                android:id="@+id/tv_chosen_pdf"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:gravity="top"
                 android:text="@string/no_file_chosen"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 

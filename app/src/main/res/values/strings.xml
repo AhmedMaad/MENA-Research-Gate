@@ -47,7 +47,7 @@
     <string name="publication_name">Publication Name</string>
     <string name="doi">DOI</string>
     <string name="co_authors">Co-Authors</string>
-    <string name="research_interests">Research Interests separated by a comma</string>
+    <string name="research_interests">Keywords separated by a comma</string>
     <string name="year">Year</string>
     <string name="upload">Upload</string>
     <string name="no_file_chosen">No file chosen</string>

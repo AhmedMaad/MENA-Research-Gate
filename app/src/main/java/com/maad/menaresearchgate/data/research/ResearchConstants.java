@@ -6,4 +6,5 @@ public class ResearchConstants {
     public static final String RESEARCH_INTEREST_COLLECTION = "Research Tokens";
     public static final String TOKENS = "tokens";
     public static final String  TOKENS_ARRAY_DOCUMENT = "TokensArrayDocument";
+    public static final String PDFS = "PDFs";
 }

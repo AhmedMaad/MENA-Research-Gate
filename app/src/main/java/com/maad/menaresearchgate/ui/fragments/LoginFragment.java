@@ -1,5 +1,6 @@
 package com.maad.menaresearchgate.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import com.maad.menaresearchgate.data.LoginHandler;
 import com.maad.menaresearchgate.data.UserModel;
 import com.maad.menaresearchgate.data.Validation;
 import com.maad.menaresearchgate.databinding.FragmentLoginBinding;
+import com.maad.menaresearchgate.ui.activities.HomeActivity;
 import com.maad.menaresearchgate.ui.activities.RegisterActivity;
 
 public class LoginFragment extends Fragment {
@@ -70,18 +72,25 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getContext(), R.string.missing_fileds, Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
+                        loginBinding.pbLogin.setVisibility(View.VISIBLE);
+                        loginBinding.btnSignin.setVisibility(View.INVISIBLE);
                         UserModel userModel = new UserModel();
                         userModel.loginWithFirebase(email, password, new LoginHandler() {
                             @Override
                             public <T> void onSuccess(Task<T> task) {
+                                loginBinding.pbLogin.setVisibility(View.GONE);
+                                loginBinding.btnSignin.setVisibility(View.VISIBLE);
                                 if (task.isSuccessful()) {
                                     Object authResultGeneric = task.getResult();
                                     AuthResult authResult = AuthResult.class.cast(authResultGeneric);
                                     FirebaseUser user = authResult.getUser();
                                     Log.d("json", "Email found: " + user.getEmail());
-                                    if (user.isEmailVerified())
-                                        Toast.makeText(getContext(), R.string.logged_successfully, Toast.LENGTH_SHORT).show();
-                                    else
+                                    if (user.isEmailVerified()) {
+                                        //Toast.makeText(getContext(), R.string.logged_successfully, Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                    } else
                                         Toast.makeText(getContext(), R.string.verify_email, Toast.LENGTH_SHORT).show();
                                 } else
                                     Toast.makeText(getContext(), R.string.wrong_email_password, Toast.LENGTH_SHORT).show();
@@ -89,6 +98,8 @@ public class LoginFragment extends Fragment {
 
                             @Override
                             public void onFailure(Exception e) {
+                                loginBinding.pbLogin.setVisibility(View.GONE);
+                                loginBinding.btnSignin.setVisibility(View.VISIBLE);
                                 Log.d("json", "Exception: " + e.getMessage());
                             }
                         });
@@ -109,15 +120,21 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getContext(), R.string.missing_fileds, Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
+                        loginBinding.pbPasswordReset.setVisibility(View.VISIBLE);
+                        loginBinding.btnPasswordResetLink.setVisibility(View.INVISIBLE);
                         UserModel userModel = new UserModel();
                         userModel.resetPassword(writtenEmail, new GeneralHandler() {
                             @Override
                             public <T> void onSuccess(Task<T> task) {
+                                loginBinding.pbPasswordReset.setVisibility(View.INVISIBLE);
+                                loginBinding.btnPasswordResetLink.setVisibility(View.VISIBLE);
                                 Toast.makeText(getContext(), R.string.check_email, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public void onFailure(Exception e) {
+                                loginBinding.pbPasswordReset.setVisibility(View.INVISIBLE);
+                                loginBinding.btnPasswordResetLink.setVisibility(View.VISIBLE);
                                 Toast.makeText(getContext(), R.string.email_not_recorded, Toast.LENGTH_SHORT).show();
                                 Log.d("json", "Error: " + e.getMessage());
                             }

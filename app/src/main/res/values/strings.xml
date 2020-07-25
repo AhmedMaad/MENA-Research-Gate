@@ -1,8 +1,5 @@
 <resources>
-    <string name="app_name">MENA Research Gate</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">MENA Gate</string>
 
     <string name="mena_logo_description">Logo for middle east and north africa research gate</string>
     <string name="facebook_login">Facebook</string>
@@ -53,4 +50,11 @@
     <string name="no_file_chosen">No file chosen</string>
     <string name="choose_file">choose file</string>
     <string name="topics">Topics:</string>
+    <string name="click_here_after_email_verification">Click here after Email verification</string>
+    <string name="upload_research">Upload Research</string>
+    <string name="my_profile">My Profile</string>
+    <string name="logout">Logout</string>
+    <string name="coming_soon">Coming Soon…</string>
+    <string name="follow_others">Follow others to see researches</string>
+    <string name="research_uploaded">Research uploaded successfully</string>
 </resources>

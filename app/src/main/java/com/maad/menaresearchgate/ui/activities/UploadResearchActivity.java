@@ -15,6 +15,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.maad.menaresearchgate.R;
 import com.maad.menaresearchgate.data.GeneralHandler;
 import com.maad.menaresearchgate.data.research.ResearchModel;
 import com.maad.menaresearchgate.data.research.TokensHandler;
@@ -164,7 +166,8 @@ public class UploadResearchActivity extends AppCompatActivity {
 
     //1- validate fields 2- upload pdf 3- update tokens "if" needed  4-add new research
     public void uploadResearch(View view) {
-
+        researchBinding.pbUploadResearch.setVisibility(View.VISIBLE);
+        researchBinding.btnUploadResearch.setVisibility(View.INVISIBLE);
         String writtenTokensString = researchBinding.etResearchInterests.getText().toString();
         ArrayList<String> newTokens = researchModel.extractNewTokens(tokensFromServer, writtenTokensString);
         ArrayList<String> allTokens = new ArrayList<>(tokensFromServer);
@@ -173,6 +176,9 @@ public class UploadResearchActivity extends AppCompatActivity {
             researchModel.updateTokens(allTokens, new TokensHandler() {
                 @Override
                 public void onSuccess(Void aVoid) {
+                    researchBinding.pbUploadResearch.setVisibility(View.INVISIBLE);
+                    researchBinding.btnUploadResearch.setVisibility(View.VISIBLE);
+                    Toast.makeText(UploadResearchActivity.this, R.string.research_uploaded, Toast.LENGTH_SHORT).show();
                     Log.d("json", "success");
                 }
 
@@ -181,6 +187,11 @@ public class UploadResearchActivity extends AppCompatActivity {
                     Log.d("json", "Failed: " + e.getMessage());
                 }
             });
+        }
+        else{
+            Toast.makeText(UploadResearchActivity.this, R.string.research_uploaded, Toast.LENGTH_SHORT).show();
+            researchBinding.pbUploadResearch.setVisibility(View.INVISIBLE);
+            researchBinding.btnUploadResearch.setVisibility(View.VISIBLE);
         }
 
     }

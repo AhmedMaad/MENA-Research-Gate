@@ -75,13 +75,24 @@
 
     <Button
         android:id="@+id/btn_signin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@color/transparent"
         android:text="@string/sign_in"
         android:textColor="@color/lighterBlue"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/container_password_et" />
+
+    <ProgressBar
+        android:id="@+id/pb_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/container_password_et" />
 
@@ -135,6 +146,13 @@
             android:text="@string/send_password_reset_link"
             android:textColor="@color/white"
             android:textSize="16sp" />
+
+        <ProgressBar
+            android:id="@+id/pb_password_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
 
         <View
             android:id="@+id/v_breakline_after_reset_btn"

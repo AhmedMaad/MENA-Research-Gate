@@ -122,7 +122,10 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Object authResultGeneric = task.getResult();
                             AuthResult authResult = AuthResult.class.cast(authResultGeneric);
-                            Toast.makeText(RegisterActivity.this, "Hello " + authResult.getUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(RegisterActivity.this, "Hello " + authResult.getUser().getDisplayName(), Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();
                         } else
                             Toast.makeText(RegisterActivity.this, R.string.wrong_email_password, Toast.LENGTH_SHORT).show();
                     }
@@ -151,6 +154,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public <T> void onSuccess(Task<T> task) {
                 Log.d("json", "User should be added by now in Firebase");
+                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
             }
 
             @Override
